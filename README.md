@@ -1,0 +1,1 @@
+# SLURM and Snakemake workshop

@@ -1,0 +1,15 @@
+rule all:
+    input: "final.txt"
+
+rule build_1:
+    output: "part_1.txt"
+    shell: "echo 'one' >{output}"
+
+rule build_2:
+    output: "part_2.txt"
+    shell: "echo 'two' >{output}"
+
+rule build_final:
+    input: "part_1.txt", "part_2.txt"
+    output: "final.txt"
+    shell: "cat {input} >{output}"
