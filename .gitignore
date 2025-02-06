@@ -1,3 +1,12 @@
 .snakemake/
 /bioinfo/snakemake/data/
 /bioinfo/snakemake/output/
+/simple/bash/final.txt
+/simple/bash/part_1.txt
+/simple/bash/part_2.txt
+/simple/make/final.txt
+/simple/make/part_1.txt
+/simple/make/part_2.txt
+/simple/snakemake/final.txt
+/simple/snakemake/part_1.txt
+/simple/snakemake/part_2.txt
