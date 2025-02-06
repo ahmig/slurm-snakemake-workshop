@@ -1,1 +1,3 @@
 .snakemake/
+/bioinfo/snakemake/data/
+/bioinfo/snakemake/output/

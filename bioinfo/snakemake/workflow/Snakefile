@@ -1,0 +1,63 @@
+ACCESSIONS = [
+    "ERR5709045",
+    "ERR5709318",
+    "ERR5709385",
+    "ERR5708657"
+]
+
+
+rule all:
+    input:
+        "output/qc/multiqc",
+        expand("output/mapping/{accession}.sorted.bam", accession=ACCESSIONS)
+
+
+rule qc_fastp:
+    conda: "envs/qc.yaml"
+    input:
+        fastq_1 = "data/{accession}_1.fastq.gz",
+        fastq_2 = "data/{accession}_2.fastq.gz"
+    output:
+        fastq_1 = "output/qc/{accession}/{accession}_1.fastq.gz",
+        fastq_2 = "output/qc/{accession}/{accession}_2.fastq.gz",
+        report = "output/qc/{accession}/fastp.html",
+        json = "output/qc/{accession}/fastp.json"
+    shell: "fastp -i {input.fastq_1} -I {input.fastq_2} -o {output.fastq_1} -O {output.fastq_2} -h {output.report} -j {output.json}"
+
+
+rule qc_multiqc:
+    conda: "envs/qc.yaml"
+    input: expand("output/qc/{accession}/fastp.json", accession=ACCESSIONS)
+    output: directory("output/qc/multiqc")
+    shell: "mkdir -p {output} && multiqc --outdir {output} {input}"
+
+
+rule download_reference:
+    params:
+        accession = "NC_045512.2",
+        file_format = "fasta"
+    output: "output/reference.fasta"
+    shell: "curl 'https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&save=file&db=nuccore&report={params.file_format}&id={params.accession}' -o {output} -s"
+
+
+rule index_reference:
+    conda: "envs/mapping.yaml"
+    input: "output/reference.fasta"
+    params:
+        preset = "sr"
+    output: "output/reference.mmi"
+    shell: "minimap2 -x {params.preset} -d {output} {input}"
+
+
+rule map_and_sort:
+    threads: 2
+    conda: "envs/mapping.yaml"
+    input:
+        index = "output/reference.mmi",
+        fastq_1 = "output/qc/{accession}/{accession}_1.fastq.gz",
+        fastq_2 = "output/qc/{accession}/{accession}_2.fastq.gz"
+    params:
+        preset = "sr"
+    output:
+        bam = "output/mapping/{accession}.sorted.bam"
+    shell: "minimap2 -t {threads} -ax {params.preset} {input.index} {input.fastq_1} {input.fastq_2} | samtools sort -o {output.bam}"
