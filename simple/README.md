@@ -53,7 +53,8 @@ run Python code inside a Snakefile). Parallelizing the workflow is
 easy and automatic thanks to the `--cores` or `-c` command line option. Snakemake
 will calculate what rules need executing
 (internally, it builds a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of jobs)
-and will execute them as.
+and its scheduler will execute them as fast as it can, considering the required
+[resources](https://snakemake.readthedocs.io/en/v8.25.5/snakefiles/rules.html#snakefiles-resources).
 
 The previous Make workflow could be written in Snakemake as:
 
