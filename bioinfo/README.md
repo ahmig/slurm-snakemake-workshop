@@ -1,22 +1,31 @@
 # Bioinformatics workflow with Snakemake
 
+We'll adapt the Bash script available at [`bash/`](/bioinfo/bash/). To test it,
+install the dependencies and run the script.
+
+```shell
+mamba/conda env create -p env -f environment.yaml
+mamba/conda activate ./env
+bash workflow.sh
+```
+
 ## Data download
 
-We'll use FASTQ files hosted by the ENA.
+The FASTQ files that comprise our dataset are hosted by the ENA.
 Files can be downloaded manually, but we'll use [`fastq-dl`](https://github.com/rpetit3/fastq-dl)
 for convenience.
 
-First, create an environment (named `pgo-workshop-bioinfo`) with `snakemake==8.25.5` and `fastq-dl==3.0.0`
-using `mamba` (recoomended) or `conda`.
+First, create an local environment (i.e. in a simple subfolder, set with `-p`)
+with `snakemake==8.25.5` and `fastq-dl==3.0.0` using `mamba` (recommended) or `conda`.
 
 ```shell
-mamba/conda create -n pgo-workshop-bioinfo -c conda-forge -c bioconda fastq-dl==3.0.0 snakemake==8.25.5
-mamba/conda activate pgo-workshop-bioinfo
-pip install legacy-cgi  # necessary is using Python >=3.13; see GitHub issue rpetit3/fastq-dl#34
+mamba/conda create -p env -c conda-forge -c bioconda fastq-dl==3.0.0 snakemake==8.25.5
+mamba/conda activate ./env
+pip install legacy-cgi  # necessary if using Python >=3.13; see GitHub issue rpetit3/fastq-dl#34
 ```
 
-Then, download the following run accessions. They contain SARS-CoV-2 reads that were
-use in our [VIPERA study](https://doi.org/10.1093/ve/veae018). All of them are paired-end Illumina reads.
+Then, download the following run accessions. They contain SARS-CoV-2 reads that we
+used in our [VIPERA study](https://doi.org/10.1093/ve/veae018). All of them are paired-end Illumina reads.
 
 ```shell
 fastq-dl --accession ERR5709045 --cpus 1 --outdir data
