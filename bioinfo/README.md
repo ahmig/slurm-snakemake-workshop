@@ -6,7 +6,7 @@ We'll use FASTQ files hosted by the ENA.
 Files can be downloaded manually, but we'll use [`fastq-dl`](https://github.com/rpetit3/fastq-dl)
 for convenience.
 
-First, create an environment (named `pgo-workshop-bioinfo`) with `snakemake` and `fastq-dl`
+First, create an environment (named `pgo-workshop-bioinfo`) with `snakemake==8.25.5` and `fastq-dl==3.0.0`
 using `mamba` (recoomended) or `conda`.
 
 ```shell
@@ -58,3 +58,12 @@ snakemake -n --verbose --printshellcmds
 # run
 snakemake -c 2 --use-conda
 ```
+
+Could we visualize this workflow?
+
+## Launching with SLURM
+
+The [SLURM executor plugin](https://snakemake.github.io/snakemake-plugin-catalog/plugins/executor/slurm.html)
+enables launching a Snakemake workflow using SLURM batch jobs. A "main" Snakemake job will manage launching and
+status of subsequent jobs. By default, one SLURM job is queued for each Snakemake job, but this behavior can
+be tweaked (see [job grouping](https://snakemake.readthedocs.io/en/v8.25.5/executing/grouping.html)).
